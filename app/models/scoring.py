@@ -1,4 +1,5 @@
 import pandas as pd
+
 from app.utils.config import STAT_WEIGHTS
 
 def calculate_paa(df: pd.DataFrame, weights:dict = None) -> pd.DataFrame:

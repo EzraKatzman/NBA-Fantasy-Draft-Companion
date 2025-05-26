@@ -1,10 +1,6 @@
-"""
-- add player to team (will show per-game stats too)
-- removes that player from dataframe
-- add command to remove player from dataframe
-- player can be added regardless of min-game requirement
-"""
 import pandas as pd
+import logging
+
 from app.data.fetch_players import fetch_current_season_stats
 from app.models.team import Team
 from app.models.scoring import calculate_paa
@@ -12,6 +8,7 @@ from app.services.draft_strategy import select_draft_strategy
 from app.utils.config import DEFAULT_SEASON
 from app.utils.string_utils import normalize_name
 
+logger = logging.getLogger(__name__)
 class UserTeamService:
     def __init__(self, season=DEFAULT_SEASON, per_mode='PerGame', ignore_min_games: bool = False, strategy: str  = 'balanced', custom_weights: dict = None):
         self.team = Team()
@@ -19,8 +16,6 @@ class UserTeamService:
         self.weights = select_draft_strategy(strategy, custom_overrides=custom_weights)
         raw_df = fetch_current_season_stats(season=season, per_mode=per_mode, ignore_min_games=ignore_min_games)
         self.player_pool_df = calculate_paa(raw_df, weights=self.weights) if not raw_df.empty else pd.DataFrame()
-        self.drafted_players = []
-        self.removed_players = []
 
     def find_player(self, player_name: str):
         self.player_pool_df["NORMALIZED_NAME"] = self.player_pool_df["PLAYER_NAME"].apply(
@@ -32,12 +27,12 @@ class UserTeamService:
         self.player_pool_df.drop(columns=["NORMALIZED_NAME"], inplace=True)
         
         if matches.empty:
-            print(f"No player named '{player_name}' found")
+            logger.error(f"No player named '{player_name}' found")
             return
         
         if len(matches) > 1:
-            print(f"Multiple players found matching '{player_name}'. Please be more specific")
-            print(matches["PLAYER_NAME"].to_list())
+            logger.error(f"Multiple players found matching '{player_name}'. Please be more specific")
+            logger.info(matches["PLAYER_NAME"].to_list())
             return
         
         return matches
@@ -51,7 +46,7 @@ class UserTeamService:
         self.team.add_player(row)
         self.player_pool_df = self.player_pool_df.drop(matches.index)
 
-        print(f"Drafted {player_name} successfully!")
+        logger.info(f"Drafted {player_name} successfully!")
     
     def exclude(self, player_name: str):
         matches = self.find_player(player_name)
@@ -61,7 +56,7 @@ class UserTeamService:
         player_name = matches.iloc[0]["PLAYER_NAME"]
         self.player_pool_df = self.player_pool_df.drop(matches.index)
 
-        print(f"Excluded {player_name} from the draft pool")
+        logger.info(f"Excluded {player_name} from the draft pool")
 
     def view_roster(self):
         return self.team.get_roster()
@@ -78,7 +73,7 @@ class UserTeamService:
     
     def show_best_available(self, top_n=15):
         if self.player_pool_df.empty:
-            print("No players available")
+            logging.error("No players available")
             return
         
         best = self.player_pool_df.sort_values(by="PAA", ascending=False).head(top_n)
@@ -95,7 +90,7 @@ class UserTeamService:
         try:
             self.weights = select_draft_strategy(new_strategy, custom_overrides=custom_weights)
             self.player_pool_df = calculate_paa(self.player_pool_df.drop(columns=["PAA"], errors="ignore"))
-            print(f"Strategy updated to {new_strategy}. PAA values recalculated")
+            logger.info(f"Strategy updated to {new_strategy}. PAA values recalculated")
         except ValueError as ve:
-            print(f"Failed to update strategy: {ve}")
+            logger.exception(f"Failed to update strategy: {ve}")
     
