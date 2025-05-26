@@ -42,7 +42,7 @@ nba-fantasy-draft-companion/
 - [ ] Add sorting by position
 - [ ] Allow for custom category weights in PAA calculation
 - [ ] Build interactive CLI or web interface
-- [ ] Replace prints with logger
+- [x] Replace prints with logger
 
 ## 🤝 Contributing
 Contributions are welcome! Feel free to open issues or pull requests.
