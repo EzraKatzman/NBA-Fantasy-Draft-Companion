@@ -30,11 +30,11 @@ uv run main.py
 ## 📁 Project Structure
 ```bash
 nba-fantasy-draft-companion/
-├── models/          # Core data models (e.g., Player, Team)
 ├── data/            # Raw/processed datasets
+├── models/          # Core data models (e.g., Player, Team)
+├── services/        # Logic models (e.g., Queries, Sorting)
 ├── utils/           # Helper functions
 ├── main.py          # Entry point for the tool
-├── requirements.txt
 └── README.md
 ```
 
