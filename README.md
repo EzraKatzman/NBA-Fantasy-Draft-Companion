@@ -52,4 +52,6 @@ nba-fantasy-draft-companion/
 Contributions are welcome! Feel free to open issues or pull requests.
 
 ## 📜 License
-MIT License. See `LICENSE` for details.
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
