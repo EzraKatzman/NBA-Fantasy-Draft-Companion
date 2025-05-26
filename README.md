@@ -22,15 +22,9 @@ Clone the repository:
 git clone https://github.com/EzraKatzman/NBA-Fantasy-Draft-Companion.git
 cd NBA_Draft_Companion
 ```
-Create and activate a virtual environment:
+Create virtual environment and Install dependencies:
 ```bash
-python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-```
-
-Install dependencies:
-```bash
-pip install -r requirements.txt
+uv run main.py
 ```
 
 ## 📁 Project Structure
