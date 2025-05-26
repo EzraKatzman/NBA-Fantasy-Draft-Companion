@@ -46,6 +46,7 @@ nba-fantasy-draft-companion/
 
 ## 📌 TODO
 - [ ] Add sorting by position
+- [ ] Allow for custom category weights in PAA calculation
 - [ ] Build interactive CLI or web interface
 
 ## 🤝 Contributing
