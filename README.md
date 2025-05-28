@@ -27,21 +27,10 @@ Create virtual environment and Install dependencies:
 uv run main.py
 ```
 
-## 📁 Project Structure
-```bash
-nba-fantasy-draft-companion/
-├── data/            # Raw/processed datasets
-├── models/          # Core data models (e.g., Player, Team)
-├── services/        # Logic models (e.g., Queries, Sorting)
-├── utils/           # Helper functions
-├── main.py          # Entry point for the tool
-└── README.md
-```
-
 ## 📌 TODO
 - [ ] Add sorting by position
 - [ ] Allow for custom category weights in PAA calculation
-- [ ] Build interactive CLI or web interface
+- [ ] Build out frontend
 - [x] Replace prints with logger
 
 ## 🤝 Contributing
