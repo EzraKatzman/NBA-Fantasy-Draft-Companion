@@ -19,9 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read():
-    return ("API is up and running")
+@app.get("/items")
+def get_items():
+    return [{"id": 1, "name": "Foo"}, {"id": 2, "name": "Bar"}]
 
 if __name__ == "__main__":
     setup_logging()
