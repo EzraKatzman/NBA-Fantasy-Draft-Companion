@@ -1,0 +1,14 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.12",
+    "loguru>=0.7.3",
+    "nba-api>=1.9.0",
+    "pandas>=2.2.3",
+    "pydantic>=2.11.5",
+    "uvicorn>=0.34.2",
+]

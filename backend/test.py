@@ -4,7 +4,6 @@ from app.data.fetch_players import fetch_current_season_stats
 from app.models.scoring import calculate_paa
 from app.services.user_team_service import UserTeamService
 from app.services.draft_strategy import list_presets
-from logging_config import setup_logging
 
 def main():
     df = fetch_current_season_stats()
@@ -45,5 +44,4 @@ def test_misc():
     print(service.search_player("Cade Cunningham"))
 
 if __name__ == "__main__":
-    setup_logging()
     test_sample_draft()
