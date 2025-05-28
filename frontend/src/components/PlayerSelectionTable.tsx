@@ -2,24 +2,62 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PlayerActionModal from "./PlayerActionModal";
+import { draftPlayer, excludePlayer, viewPlayers } from "@/api";
 
 export default function PlayerSelectionTable() {
     const [playerData, setPlayerData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedPlayer, setSelectedPlayer] = useState<any | null>(null);
     const rowsPerPage = 10;
 
     useEffect(() => {
-        const fetchPlayers = async () => {
-            try {
-                const response = await axios.get("http://localhost:8000/view-players");
-                setPlayerData(response.data);
-            } catch (error) {
-                console.error("Failed to fetch player data:", error);
-            }
-        };
-
         fetchPlayers();
     }, []);
+
+    const fetchPlayers = async() => {
+        const players = await viewPlayers();
+        setPlayerData(players);
+    }
+
+    const openModal = (player: any) => {
+        setSelectedPlayer(player);
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+        setSelectedPlayer(null);
+    };
+
+    const handleDraft = async() => {
+        if (!selectedPlayer) return;
+        try {
+            await draftPlayer(selectedPlayer.PLAYER_NAME);
+            await fetchPlayers();
+            // Add visual feedback for player drafted
+            alert(`${selectedPlayer.PLAYER_NAME} drafted!`);
+            closeModal();
+        } catch (error) {
+            console.error(error);
+            alert("Failed to draft player");
+        }
+    };
+
+    const handleExclude = async() => {
+        if (!selectedPlayer) return;
+        try {
+            await excludePlayer(selectedPlayer.PLAYER_NAME);
+            await fetchPlayers();
+            alert(`${selectedPlayer.PLAYER_NAME} removed from pool!`);
+            closeModal();
+            // Optionally refresh player data here
+        } catch (err) {
+            console.error(err);
+            alert("Failed to remove player.");
+        } 
+    }
 
     if (playerData.length === 0) return <div>Loading...</div>
 
@@ -36,7 +74,7 @@ export default function PlayerSelectionTable() {
 
     return (
         <div className="w-full max-w-[1250px] mx-auto">
-          <div className="overflow-x-auto border rounded-lg shadow">
+          <div className={`overflow-x-auto border rounded-lg shadow ${modalOpen ? "opacity-50 pointer-events-none" : ""}`}>
             <table className="w-full table-fixed text-sm text-left">
               <thead className="bg-gray-100">
                 <tr className="h-12 bg-amber-500">
@@ -56,6 +94,7 @@ export default function PlayerSelectionTable() {
                 {currentRows.map((row, i) => (
                   <tr
                     key={`${row.playerName}-${i}`}
+                    onClick={() => openModal(row)}
                     className={`h-12 border-t hover:bg-teal-200 ${i % 2 === 1 ? "bg-[#F7F3E3]" : ""}`}
                   >
                     {columns.map((col) => (
@@ -147,6 +186,14 @@ export default function PlayerSelectionTable() {
                 Next
             </button>
           </div>
+          {modalOpen && selectedPlayer && (
+            <PlayerActionModal
+            player={selectedPlayer}
+            onDraft={handleDraft}
+            onExclude={handleExclude}
+            onClose={closeModal}
+          />
+          )}
         </div>
     );
 }

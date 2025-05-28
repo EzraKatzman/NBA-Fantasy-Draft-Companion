@@ -1,11 +1,12 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.services.user_team_service import UserTeamService
 from logging_config import setup_logging
 
 app = FastAPI()
+user_service = UserTeamService()
 
 origins = [
     "http://localhost:3000"
@@ -19,7 +20,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-user_service = UserTeamService()
 @app.get("/view-players")
 def view_players():
     """
@@ -34,10 +34,19 @@ def view_players():
     sorted_df = df.sort_values(by="PAA", ascending=False)
     return sorted_df.to_dict(orient="records")
 
+@app.post("/draft/{player_name}")
+def draft_player(player_name: str):
+    result = user_service.draft(player_name)
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"Player {player_name} not found or already drafted.")
+    return {"message": f"Drafted {player_name} successfully!"}
 
-@app.get("/items")
-def get_items():
-    return [{"id": 1, "name": "Foo"}, {"id": 2, "name": "Bar"}]
+@app.post("/exclude/{player_name}")
+def exclude_player(player_name: str):
+    result = user_service.exclude(player_name)
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"Player '{player_name}' not found or already excluded.")
+    return {"message": f"Excluded {player_name} from the draft pool"}
 
 if __name__ == "__main__":
     setup_logging()

@@ -6,7 +6,7 @@ from app.models.team import Team
 from app.models.scoring import calculate_paa
 from app.services.draft_strategy import select_draft_strategy
 from app.utils.config import DEFAULT_SEASON
-from app.utils.string_utils import normalize_name, normalize_player_stats
+from app.utils.string_utils import normalize_player_stats
 class UserTeamService:
     def __init__(self, season=DEFAULT_SEASON, per_mode='PerGame', ignore_min_games: bool = False, strategy: str  = 'balanced', custom_weights: dict = None):
         self.team = Team()
@@ -16,13 +16,16 @@ class UserTeamService:
         self.player_pool_df = calculate_paa(raw_df, weights=self.weights) if not raw_df.empty else pd.DataFrame()
 
     def find_player(self, player_name: str):
-        self.player_pool_df["NORMALIZED_NAME"] = self.player_pool_df["PLAYER_NAME"].apply(
-            lambda name: normalize_name(name).lower()
-        )
+        # self.player_pool_df["NORMALIZED_NAME"] = self.player_pool_df["PLAYER_NAME"].apply(
+        #     lambda name: normalize_name(name).lower()
+        # )
+        # matches = self.player_pool_df[
+        #     self.player_pool_df["NORMALIZED_NAME"].str.lower() == player_name.lower()
+        # ]
+        # self.player_pool_df.drop(columns=["NORMALIZED_NAME"], inplace=True)
         matches = self.player_pool_df[
-            self.player_pool_df["NORMALIZED_NAME"].str.lower() == player_name.lower()
+            self.player_pool_df["PLAYER_NAME"].str.lower() == player_name.lower()
         ]
-        self.player_pool_df.drop(columns=["NORMALIZED_NAME"], inplace=True)
         
         if matches.empty:
             logger.error(f"No player named '{player_name}' found")
@@ -38,23 +41,25 @@ class UserTeamService:
     def draft(self, player_name: str):
         matches = self.find_player(player_name)
         if matches is None:
-            return
+            return False
         
         row = matches.iloc[0]
         self.team.add_player(row)
         self.player_pool_df = self.player_pool_df.drop(matches.index)
 
         logger.info(f"Drafted {player_name} successfully!")
+        return True
     
     def exclude(self, player_name: str):
         matches = self.find_player(player_name)
         if matches is None:
-            return
+            return False
 
         player_name = matches.iloc[0]["PLAYER_NAME"]
         self.player_pool_df = self.player_pool_df.drop(matches.index)
 
         logger.info(f"Excluded {player_name} from the draft pool")
+        return True
 
     def view_roster(self):
         return self.team.get_roster()
