@@ -74,10 +74,10 @@ export default function PlayerSelectionTable() {
 
     return (
         <div className="w-full max-w-[1250px] mx-auto">
-          <div className={`overflow-x-auto border rounded-lg shadow ${modalOpen ? "opacity-50 pointer-events-none" : ""}`}>
+          <div className={`overflow-x-auto mt-4 border rounded-lg shadow ${modalOpen ? "opacity-50 pointer-events-none" : ""}`}>
             <table className="w-full table-fixed text-sm text-left">
               <thead className="bg-gray-100">
-                <tr className="h-12 bg-amber-500">
+                <tr className="h-12 border-b bg-amber-500">
                     {columns.map((col, index) => (
                       <th
                         key={col}
@@ -95,7 +95,7 @@ export default function PlayerSelectionTable() {
                   <tr
                     key={`${row.playerName}-${i}`}
                     onClick={() => openModal(row)}
-                    className={`h-12 border-t hover:bg-teal-200 ${i % 2 === 1 ? "bg-[#F7F3E3]" : ""}`}
+                    className={`h-12 hover:bg-teal-200 ${i % 2 === 1 ? "bg-[#F7F3E3]" : ""}`}
                   >
                     {columns.map((col) => (
                     <td key={col} className="px-2 truncate">
