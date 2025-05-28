@@ -1,9 +1,6 @@
-import logging
 from copy import deepcopy
 
 from app.utils.config import STAT_WEIGHTS
-
-logger = logging.getLogger(__name__)
 
 PRESET_STRATEGIES = {
     'balanced': {},

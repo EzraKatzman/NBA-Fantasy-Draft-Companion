@@ -1,5 +1,5 @@
 import pandas as pd
-import logging
+from loguru import logger
 
 from app.data.fetch_players import fetch_current_season_stats
 from app.models.team import Team
@@ -7,8 +7,6 @@ from app.models.scoring import calculate_paa
 from app.services.draft_strategy import select_draft_strategy
 from app.utils.config import DEFAULT_SEASON
 from app.utils.string_utils import normalize_name
-
-logger = logging.getLogger(__name__)
 class UserTeamService:
     def __init__(self, season=DEFAULT_SEASON, per_mode='PerGame', ignore_min_games: bool = False, strategy: str  = 'balanced', custom_weights: dict = None):
         self.team = Team()
@@ -73,7 +71,7 @@ class UserTeamService:
     
     def show_best_available(self, top_n=15):
         if self.player_pool_df.empty:
-            logging.error("No players available")
+            logger.error("No players available")
             return
         
         best = self.player_pool_df.sort_values(by="PAA", ascending=False).head(top_n)

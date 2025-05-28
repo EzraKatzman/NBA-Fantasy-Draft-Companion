@@ -1,10 +1,8 @@
 from nba_api.stats.endpoints import leaguedashplayerstats
+from loguru import logger
 import pandas as pd
-import logging
 
 from app.utils.config import RAW_9CAT_COLUMNS, STAT_RENAME_MAP, DEFAULT_SEASON, MINIMUM_GAME_REQUIREMENT
-
-logger = logging.getLogger(__name__)
 
 def fetch_current_season_stats(season=DEFAULT_SEASON, per_mode='PerGame', ignore_min_games: bool = False):
     try:

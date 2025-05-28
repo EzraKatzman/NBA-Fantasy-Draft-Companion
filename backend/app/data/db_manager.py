@@ -1,10 +1,8 @@
 import pandas as pd
-import logging
 import os
+from loguru import logger
 
 from app.utils.config import DEFAULT_DB_PATH
-
-logger = logging.getLogger(__name__)
 
 def save_dataframe(df: pd.DataFrame, path: str = DEFAULT_DB_PATH):
     try:
