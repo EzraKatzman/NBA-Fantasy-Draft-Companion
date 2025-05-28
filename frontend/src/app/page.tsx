@@ -1,14 +1,10 @@
-import { fetchItems, type Item } from "@/api";
-
+import PlayerSelectionTable from "@/components/PlayerSelectionTable";
 
 export default async function Home() {
-  const items: Item[] = await fetchItems();
 
   return (
-    <div className="">
-      {items.map((item) => (
-        <div key={item.id}>{item.name}</div>
-      ))}
+    <div className="min-h-screen p6 bg-gray-50">
+      <PlayerSelectionTable />
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
+from app.services.user_team_service import UserTeamService
 from logging_config import setup_logging
 
 app = FastAPI()
@@ -18,6 +18,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+user_service = UserTeamService()
+@app.get("/view-players")
+def view_players():
+    """
+    Returns the full list of available players sorted by PAA (descending).
+    The frontend paginates this data.
+    """
+    df = user_service.view_remaining_pool()
+
+    if df.empty:
+        return {"error": "No players available"}
+    
+    sorted_df = df.sort_values(by="PAA", ascending=False)
+    return sorted_df.to_dict(orient="records")
+
 
 @app.get("/items")
 def get_items():

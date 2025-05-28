@@ -6,7 +6,7 @@ from app.models.team import Team
 from app.models.scoring import calculate_paa
 from app.services.draft_strategy import select_draft_strategy
 from app.utils.config import DEFAULT_SEASON
-from app.utils.string_utils import normalize_name
+from app.utils.string_utils import normalize_name, normalize_player_stats
 class UserTeamService:
     def __init__(self, season=DEFAULT_SEASON, per_mode='PerGame', ignore_min_games: bool = False, strategy: str  = 'balanced', custom_weights: dict = None):
         self.team = Team()
@@ -60,7 +60,7 @@ class UserTeamService:
         return self.team.get_roster()
     
     def view_remaining_pool(self):
-        return self.player_pool_df.copy()
+        return normalize_player_stats(self.player_pool_df)
     
     def search_player(self, player_name: str):
         matches = self.find_player(player_name)
