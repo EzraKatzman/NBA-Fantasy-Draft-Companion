@@ -1,36 +1,7 @@
 from copy import deepcopy
 from loguru import logger
 
-from app.utils.config import STAT_WEIGHTS
-
-PRESET_STRATEGIES = {
-    'balanced': {},
-    'punt_fg': {
-        'FG%': 0.0,
-        '3PM': 1.2,
-        'FT%': 1.1,
-        'AST': 1.1,
-        'STL': 1.1,
-    },
-    'punt_tov': {
-        'TOV': 0.0,
-    },
-    'big_man_focus': {
-        'REB': 1.2,
-        'BLK': 1.3,
-        'FG%': 1.1,
-        'FT%': 0.8,
-        'AST': 0.9,
-        '3PM': 0.8,
-    },
-    'guard_focus': {
-        'AST': 1.2,
-        '3PM': 1.2,
-        'FT%': 1.1,
-        'REB': 0.8,
-        'BLK': 0.8,
-    }
-}
+from app.utils.config import STAT_WEIGHTS, PRESET_STRATEGIES
 
 def list_presets() -> list:
     """

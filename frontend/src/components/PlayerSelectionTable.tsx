@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import PlayerActionModal from "./PlayerActionModal";
 import Dropdown from "./Dropdown";
 import InfoIcon from "../../public/icons/info_icon";
+import PlayerSearchInput from "./PlayerSearchbar";
 import { draftPlayer, excludePlayer, viewPlayers, updateStrategy } from "@/api";
 
 export default function PlayerSelectionTable() {
@@ -14,15 +15,18 @@ export default function PlayerSelectionTable() {
     const [modalOpen, setModalOpen] = useState(false);
     const rowsPerPage = 10;
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     const filterOptions = ["All Positions", "G", "F", "C", "G/F", "F/C"];
     const [selectedFilterOption, setSelectedFilterOption] = useState(filterOptions[0]);
 
-    const strategyOptions = ["Balanced", "Punt FG%", "Big Man Focus", "Guard Focus"]
+    const strategyOptions = ["Balanced", "Ignore FG%/FT%", "Ignore Turnovers", "Big Heavy", "Guard Heavy"]
     const STRATEGY_LABEL_TO_KEY: Record<string, string> = {
       "Balanced": "balanced",
-      "Punt FG%": "punt_fg",
-      "Big Man Focus": "big_man_focus",
-      "Guard Focus": "guard_focus",
+      "Ignore FG%/FT%": "punt_fg",
+      "Ignore Turnovers": "punt_tov",
+      "Big Heavy": "big_man_focus",
+      "Guard Heavy": "guard_focus",
     };
     const [selectedStrategyOption, setSelectedStrategyOption] = useState(strategyOptions[0]);
 
@@ -87,10 +91,14 @@ export default function PlayerSelectionTable() {
         }
     }
 
+    const filteredPlayerData = playerData.filter((player) => 
+      player.PLAYER_NAME.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (playerData.length === 0) return <div>Loading...</div>
 
     const totalPages = Math.ceil(playerData.length / rowsPerPage);
-    const currentRows = playerData.slice((currentPage - 1) * rowsPerPage, (currentPage - 1) * rowsPerPage + rowsPerPage);
+    const currentRows = filteredPlayerData.slice((currentPage - 1) * rowsPerPage, (currentPage - 1) * rowsPerPage + rowsPerPage);
 
     const goToPage = (page: number) => {
         if (page < 1) page = 1;
@@ -104,6 +112,13 @@ export default function PlayerSelectionTable() {
         <div className="w-full max-w-[1250px] mx-auto">
           <div className="h-10"></div>
           <div className="flex flex-row gap-4">
+            <PlayerSearchInput
+              value={searchTerm}
+              onChange={(val) => {
+                setSearchTerm(val);
+                setCurrentPage(1);
+              }}
+            />
             <Dropdown
               label="Filter by Position:"
               options={filterOptions}

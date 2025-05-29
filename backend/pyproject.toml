@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "dotenv>=0.9.9",
     "fastapi>=0.115.12",
     "loguru>=0.7.3",
     "nba-api>=1.9.0",

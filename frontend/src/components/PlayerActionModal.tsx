@@ -20,15 +20,15 @@ export default function PlayerActionModal({
     }, []);
 
     return (
-      <div className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 
-                  bg-white rounded-xl p-6 shadow-xl 
+      <div className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 border border-stone-900
+                  bg-[#F7F3E3] rounded-xl p-6 shadow-xl 
                   transition-transform duration-300 ease-out
-                  ${show ? "translate-y-20 opacity-100" : "-translate-y-96 opacity-0"}`}>
-            <h2 className="text-xl font-bold mb-4">{player.PLAYER_NAME}</h2>
+                  ${show ? "translate-y-60 opacity-100" : "-translate-y-96 opacity-0"}`}>
+            <h2 className="text-xl text-center font-bold mb-4">{player.PLAYER_NAME}</h2>
             <div className="flex justify-between space-x-4">
                 <button
                     onClick={onDraft}
-                    className="bg-teal-400 hover:bg-teal-500 text-white px-4 py-2 rounded"
+                    className="bg-teal-400 hover:bg-teal-500 text-stone-900 px-4 py-2 rounded"
                 >
                     Draft
                 </button>
@@ -40,7 +40,7 @@ export default function PlayerActionModal({
                 </button>
                 <button
                     onClick={onClose}
-                    className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
+                    className="bg-gray-300 hover:bg-gray-400 text-stone-900 px-4 py-2 rounded"
                 >
                     Cancel
                 </button>

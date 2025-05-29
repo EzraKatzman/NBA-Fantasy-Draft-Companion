@@ -1,3 +1,8 @@
+import os
+import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Default NBA Season
 DEFAULT_SEASON = '2024-25'
@@ -16,17 +21,15 @@ STAT_RENAME_MAP = {
     'FG3M': '3PM'
 }
 
-STAT_WEIGHTS = {
-    'PTS': 1.0,
-    'REB': 1.0,
-    'AST': 1.0,
-    'STL': 1.0,
-    'BLK': 1.0,
-    'FG%': 1.0,
-    'FT%': 1.0,
-    '3PM': 1.0,
-    'TOV': 1.0
-}
+try:
+    STAT_WEIGHTS = json.loads(os.getenv("STAT_WEIGHTS", "{}"))
+except json.JSONDecodeError:
+    raise ValueError("Invalid STAT_WEIGHTS format in .env")
+
+try:
+    PRESET_STRATEGIES = json.loads(os.getenv("PRESET_STRATEGIES", "{}"))
+except json.JSONDecodeError:
+    raise ValueError("Invalid PRESET_STRATEGIES format in .env")
 
 MINIMUM_GAME_REQUIREMENT = 42
 
