@@ -1,16 +1,30 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import PlayerActionModal from "./PlayerActionModal";
-import { draftPlayer, excludePlayer, viewPlayers } from "@/api";
+import Dropdown from "./Dropdown";
+import InfoIcon from "../../public/icons/info_icon";
+import { draftPlayer, excludePlayer, viewPlayers, updateStrategy } from "@/api";
 
 export default function PlayerSelectionTable() {
     const [playerData, setPlayerData] = useState<any[]>([]);
+    const [selectedPlayer, setSelectedPlayer] = useState<any | null>(null);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedPlayer, setSelectedPlayer] = useState<any | null>(null);
     const rowsPerPage = 10;
+
+    const filterOptions = ["All Positions", "G", "F", "C", "G/F", "F/C"];
+    const [selectedFilterOption, setSelectedFilterOption] = useState(filterOptions[0]);
+
+    const strategyOptions = ["Balanced", "Punt FG%", "Big Man Focus", "Guard Focus"]
+    const STRATEGY_LABEL_TO_KEY: Record<string, string> = {
+      "Balanced": "balanced",
+      "Punt FG%": "punt_fg",
+      "Big Man Focus": "big_man_focus",
+      "Guard Focus": "guard_focus",
+    };
+    const [selectedStrategyOption, setSelectedStrategyOption] = useState(strategyOptions[0]);
 
     useEffect(() => {
         fetchPlayers();
@@ -52,11 +66,25 @@ export default function PlayerSelectionTable() {
             await fetchPlayers();
             alert(`${selectedPlayer.PLAYER_NAME} removed from pool!`);
             closeModal();
-            // Optionally refresh player data here
         } catch (err) {
             console.error(err);
             alert("Failed to remove player.");
         } 
+    }
+
+    const handleStrategyChange = async(strategyLabel: string) => {
+        const strategyKey = STRATEGY_LABEL_TO_KEY[strategyLabel] ?? strategyLabel.toLocaleLowerCase();
+        try {
+          const response = await updateStrategy(strategyKey);
+          if (response.players) {
+            setPlayerData(response.players);
+            setCurrentPage(1);
+          } else {
+            await fetchPlayers();
+          }
+        } catch (err) {
+          console.error(err);
+        }
     }
 
     if (playerData.length === 0) return <div>Loading...</div>
@@ -74,7 +102,35 @@ export default function PlayerSelectionTable() {
 
     return (
         <div className="w-full max-w-[1250px] mx-auto">
-          <div className={`overflow-x-auto mt-4 border rounded-lg shadow ${modalOpen ? "opacity-50 pointer-events-none" : ""}`}>
+          <div className="h-10"></div>
+          <div className="flex flex-row gap-4">
+            <Dropdown
+              label="Filter by Position:"
+              options={filterOptions}
+              value={selectedFilterOption}
+              onChange={setSelectedFilterOption}
+            />
+            <Dropdown
+              label={
+                <span className="flex items-center gap-1">
+                  <div className="relative group -ml-1.5">
+                    <InfoIcon className="cursor-pointer"/>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block whitespace-nowrap rounded bg-amber-500 px-2 py-1 text-xs text-stone-900 shadow-lg z-10">
+                      The draft strategy will determine how each stat is weighed when calculating the PAA score 
+                    </div>
+                  </div>
+                  Draft Strategy:
+                </span>
+              }
+              options={strategyOptions}
+              value={selectedStrategyOption}
+              onChange={setSelectedStrategyOption}
+              onSelectClick={(selectedStrategyOption) => {
+                handleStrategyChange(selectedStrategyOption)
+              }}
+            />
+          </div>
+          <div className={`overflow-x-auto mt-4 border rounded-2xl shadow ${modalOpen ? "opacity-50 pointer-events-none" : ""}`}>
             <table className="w-full table-fixed text-sm text-left">
               <thead className="bg-gray-100">
                 <tr className="h-12 border-b bg-amber-500">
@@ -99,7 +155,9 @@ export default function PlayerSelectionTable() {
                   >
                     {columns.map((col) => (
                     <td key={col} className="px-2 truncate">
-                      {row[col]}
+                      {col === "PAA" && typeof row[col] === "number"
+                      ? row[col].toFixed(2)
+                      : row[col]}
                     </td>
                     ))}
                   </tr>

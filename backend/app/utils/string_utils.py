@@ -35,6 +35,8 @@ def normalize_player_stats(df: pd.DataFrame) -> pd.DataFrame:
                 df_copy[col] = df_copy[col].apply(lambda x: f"{x:.{decimals}f}")
 
         if "PAA" in df_copy.columns:
-            df_copy["PAA"] = df_copy["PAA"].round(2)
+            df_copy["PAA"] = pd.to_numeric(df_copy["PAA"], errors="coerce").round(2)
+
 
     return df_copy
+

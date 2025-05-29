@@ -90,10 +90,13 @@ class UserTeamService:
             new_strategy (str): Name of the new strategy to apply.
             custom_weights (dict): Optional custom overrides for the new strategy.
         """
+        logger.info(f"Attempted Strategy {new_strategy}")
         try:
             self.weights = select_draft_strategy(new_strategy, custom_overrides=custom_weights)
-            self.player_pool_df = calculate_paa(self.player_pool_df.drop(columns=["PAA"], errors="ignore"))
+            self.player_pool_df = calculate_paa(self.player_pool_df.drop(columns=["PAA"], errors="ignore"), weights=self.weights)
             logger.info(f"Strategy updated to {new_strategy}. PAA values recalculated")
+            return True
         except ValueError as ve:
             logger.exception(f"Failed to update strategy: {ve}")
+            return False
     

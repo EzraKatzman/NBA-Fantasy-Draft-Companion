@@ -1,4 +1,5 @@
 from copy import deepcopy
+from loguru import logger
 
 from app.utils.config import STAT_WEIGHTS
 
@@ -91,6 +92,7 @@ def select_draft_strategy(selection: str, custom_overrides: dict = None) -> dict
 
     # if selection != 'custom' and selection not in PRESET_STRATEGIES:
     if selection not in PRESET_STRATEGIES:
+        logger.error(f"{selection} not a valid strategy")
         raise ValueError(f"Invalid strategy selection. Choose from: {list_presets()}")
     
     return apply_draft_strategy(strategy=selection, custom_overrides=custom_overrides)

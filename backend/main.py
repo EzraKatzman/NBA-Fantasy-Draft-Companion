@@ -48,6 +48,16 @@ def exclude_player(player_name: str):
         raise HTTPException(status_code=404, detail=f"Player '{player_name}' not found or already excluded.")
     return {"message": f"Excluded {player_name} from the draft pool"}
 
+@app.post("/strategy/{strategy_type}")
+def set_strategy(strategy_type: str):
+    result = user_service.update_strategy(strategy_type)
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"Strategy of type {strategy_type} not found.")
+    
+    updated_players_df = user_service.view_remaining_pool()
+    sorted_df = updated_players_df.sort_values(by="PAA", ascending=False)
+    return {"message": f"Strategy changed to {strategy_type}", "players": sorted_df.to_dict(orient="records")}
+
 if __name__ == "__main__":
     setup_logging()
 
