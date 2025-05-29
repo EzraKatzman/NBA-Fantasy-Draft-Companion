@@ -5,6 +5,7 @@ interface PlayerActionModalProps {
     onDraft: () => void;
     onExclude: () => void;
     onClose: () => void;
+    isOpen: boolean;
 }
 
 export default function PlayerActionModal({
@@ -12,18 +13,37 @@ export default function PlayerActionModal({
     onDraft,
     onExclude,
     onClose,
+    isOpen
 }: PlayerActionModalProps) {
-    const [show, setShow] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        setShow(true);
-    }, []);
+        setVisible(isOpen)
+    }, [isOpen]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener("keydown", handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    })
+
+    if (!isOpen) return null;
 
     return (
       <div className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 border border-stone-900
-                  bg-[#F7F3E3] rounded-xl p-6 shadow-xl 
-                  transition-transform duration-300 ease-out
-                  ${show ? "translate-y-60 opacity-100" : "-translate-y-96 opacity-0"}`}>
+                bg-[#F7F3E3] rounded-xl p-6 shadow-xl 
+                transition-transform duration-300 ease-out
+                ${visible ? "translate-y-60 opacity-100" : "-translate-y-96 opacity-0"}`}>
             <h2 className="text-xl text-center font-bold mb-4">{player.PLAYER_NAME}</h2>
             <div className="flex justify-between space-x-4">
                 <button

@@ -78,7 +78,7 @@ export default function PlayerSelectionTable() {
     }
 
     const handleStrategyChange = async(strategyLabel: string) => {
-        const strategyKey = STRATEGY_LABEL_TO_KEY[strategyLabel] ?? strategyLabel.toLocaleLowerCase();
+        const strategyKey = STRATEGY_LABEL_TO_KEY[strategyLabel] ?? strategyLabel.toLowerCase();
         try {
           const response = await updateStrategy(strategyKey);
           if (response.players) {
@@ -102,9 +102,7 @@ export default function PlayerSelectionTable() {
     const currentRows = filteredPlayerData.slice((currentPage - 1) * rowsPerPage, (currentPage - 1) * rowsPerPage + rowsPerPage);
 
     const goToPage = (page: number) => {
-        if (page < 1) page = 1;
-        else if (page > totalPages) page = totalPages;
-        setCurrentPage(page);
+        setCurrentPage(Math.max(1, Math.min(page, totalPages)));
     };
 
     const columns = playerData.length > 0 ? Object.keys(playerData[0]) : [];
@@ -141,7 +139,7 @@ export default function PlayerSelectionTable() {
               options={strategyOptions}
               value={selectedStrategyOption}
               onChange={setSelectedStrategyOption}
-              onSelectClick={(selectedStrategyOption) => {
+              onSelectAction={(selectedStrategyOption) => {
                 handleStrategyChange(selectedStrategyOption)
               }}
             />
@@ -157,7 +155,7 @@ export default function PlayerSelectionTable() {
                             index === 0 ? 'w-[20%]' : 'w-[8%]'
                         }`}
                       >
-                        {col}
+                        {col === "PLAYER_NAME" ? "Player Name" : col}
                       </th>
                     ))}
                 </tr>
@@ -165,7 +163,7 @@ export default function PlayerSelectionTable() {
               <tbody>
                 {currentRows.map((row, i) => (
                   <tr
-                    key={`${row.playerName}-${i}`}
+                    key={`${row.PLAYER_NAME}-${i}`}
                     onClick={() => openModal(row)}
                     className={`h-12 cursor-pointer hover:bg-teal-200 ${i % 2 === 1 ? "bg-[#F7F3E3]" : ""}`}
                   >
@@ -188,14 +186,13 @@ export default function PlayerSelectionTable() {
             totalPages={totalPages}
             goToPage={goToPage}
           />
-          {modalOpen && selectedPlayer && (
-            <PlayerActionModal
+          <PlayerActionModal
             player={selectedPlayer}
             onDraft={handleDraft}
             onExclude={handleExclude}
             onClose={closeModal}
+            isOpen={modalOpen}
           />
-          )}
         </div>
     );
 }
