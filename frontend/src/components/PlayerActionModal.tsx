@@ -28,19 +28,19 @@ export default function PlayerActionModal({
             <div className="flex justify-between space-x-4">
                 <button
                     onClick={onDraft}
-                    className="bg-teal-400 hover:bg-teal-500 text-stone-900 px-4 py-2 rounded"
+                    className="cursor-pointer bg-teal-400 hover:bg-teal-500 text-stone-900 px-4 py-2 rounded"
                 >
                     Draft
                 </button>
                 <button
                     onClick={onExclude}
-                    className="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded"
+                    className="cursor-pointer bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded"
                 >
                     Remove
                 </button>
                 <button
                     onClick={onClose}
-                    className="bg-gray-300 hover:bg-gray-400 text-stone-900 px-4 py-2 rounded"
+                    className="cursor-pointer bg-gray-300 hover:bg-gray-400 text-stone-900 px-4 py-2 rounded"
                 >
                     Cancel
                 </button>

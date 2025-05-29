@@ -21,10 +21,10 @@ export default function PlayerSelectionTable() {
     const filterOptions = ["All Positions", "G", "F", "C", "G/F", "F/C"];
     const [selectedFilterOption, setSelectedFilterOption] = useState(filterOptions[0]);
 
-    const strategyOptions = ["Balanced", "Ignore FG%/FT%", "Ignore Turnovers", "Big Heavy", "Guard Heavy"]
+    const strategyOptions = ["Balanced", "Ignore FG% FT%", "Ignore Turnovers", "Big Heavy", "Guard Heavy"]
     const STRATEGY_LABEL_TO_KEY: Record<string, string> = {
       "Balanced": "balanced",
-      "Ignore FG%/FT%": "punt_fg",
+      "Ignore FG% FT%": "punt_fg",
       "Ignore Turnovers": "punt_tov",
       "Big Heavy": "big_man_focus",
       "Guard Heavy": "guard_focus",
@@ -167,7 +167,7 @@ export default function PlayerSelectionTable() {
                   <tr
                     key={`${row.playerName}-${i}`}
                     onClick={() => openModal(row)}
-                    className={`h-12 hover:bg-teal-200 ${i % 2 === 1 ? "bg-[#F7F3E3]" : ""}`}
+                    className={`h-12 cursor-pointer hover:bg-teal-200 ${i % 2 === 1 ? "bg-[#F7F3E3]" : ""}`}
                   >
                     {columns.map((col) => (
                     <td key={col} className="px-2 truncate">
