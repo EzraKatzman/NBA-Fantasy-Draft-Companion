@@ -5,6 +5,7 @@ import PlayerActionModal from "./PlayerActionModal";
 import Dropdown from "./Dropdown";
 import InfoIcon from "../../public/icons/info_icon";
 import PlayerSearchInput from "./PlayerSearchbar";
+import Pagination from "./Pagination";
 import { draftPlayer, excludePlayer, viewPlayers, updateStrategy } from "@/api";
 
 export default function PlayerSelectionTable() {
@@ -182,83 +183,11 @@ export default function PlayerSelectionTable() {
           </div>
 
         {/* Pagination Rendering */}
-          <div className="flex justify-center items-center mt-4 space-x-2">
-            <button
-                onClick={() => goToPage(currentPage - 1)}
-                aria-disabled={currentPage === 1}
-                className={`px-3 py-1 rounded border ${
-                    currentPage === 1
-                    ? "cursor-not-allowed text-gray-400 border-gray-300"
-                    : "hover:bg-[#F7F3E3] text-black border-gray-400"
-                }`}
-            >
-                Prev
-            </button>
-
-            {/* Always show first page */}
-            <button
-                onClick={() => goToPage(1)}
-                className={`px-3 py-1 rounded border ${
-                  currentPage === 1 ? "bg-amber-500 text-stone-900" : "hover:bg-[#F7F3E3]"
-                }`}
-            >
-                1
-            </button>
-            {/* Left ellipsis */}
-            {currentPage > 3 && <span className="px-2">...</span>}
-
-            {/* Pages around current */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(
-                    (page) =>
-                        page !== 1 &&
-                        page !== totalPages &&
-                        page >= currentPage - 2 &&
-                        page <= currentPage + 2
-                )
-                .map((page) => (
-                    <button
-                        key={page}
-                        onClick={() => goToPage(page)}
-                        className={`px-3 py-1 rounded border ${
-                            page === currentPage
-                              ? "bg-amber-500 text-stone-900"
-                              : "hover:bg-[#F7F3E3]"
-                        }`}
-                    >
-                        {page}
-                    </button>
-                ))}
-
-            {/* Right ellipsis */}
-            {currentPage < totalPages - 2 && <span className="px-2">...</span>}
-            
-            {/* Always show last page */}
-            {totalPages > 1 && (
-                <button
-                    onClick={() => goToPage(totalPages)}
-                    className={`px-3 py-1 rounded border ${
-                        currentPage === totalPages
-                        ? "bg-amber-500 text-stone-900"
-                        : "hover:bg-[#F7F3E3]"
-                    }`}
-                >
-                    {totalPages}
-                </button>
-            )}
-
-            <button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`px-3 py-1 rounded border ${
-                    currentPage === totalPages
-                    ? "cursor-not-allowed text-gray-400 border-gray-300"
-                    : "hover:bg-[#F7F3E3] text-black border-gray-400"
-                }`}
-            >
-                Next
-            </button>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            goToPage={goToPage}
+          />
           {modalOpen && selectedPlayer && (
             <PlayerActionModal
             player={selectedPlayer}
