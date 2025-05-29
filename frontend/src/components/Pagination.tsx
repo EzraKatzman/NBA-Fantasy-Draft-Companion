@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ChevronRight from "../../public/icons/chevronRight";
 import ChevronLeft from "../../public/icons/chevronLeft";
 
@@ -14,6 +14,24 @@ export default function Pagination({
     goToPage
 }: PaginationProps) {
     const [showDropdown, setShowDropdown] = useState(false);
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const currentPageRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (showDropdown && dropdownRef.current && currentPageRef.current) {
+        const dropdown = dropdownRef.current;
+        const currentItem = currentPageRef.current;
+
+        const dropdownHeight = dropdown.offsetHeight;
+        const itemOffsetTop = currentItem.offsetTop;
+        const itemHeight = currentItem.offsetHeight;
+
+        const scrollTop = itemOffsetTop - dropdownHeight / 2 + itemHeight / 2;
+
+        dropdown.scrollTop = scrollTop;
+      }
+    }, [showDropdown]);
 
     const toggleDropdown = () => setShowDropdown(!showDropdown);
     const closeDropdown = () => setShowDropdown(false);
@@ -42,12 +60,14 @@ export default function Pagination({
               </button>
                 {showDropdown && (
                 <div
+                  ref={dropdownRef}
                   className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 max-h-60 overflow-y-auto border rounded-xl bg-[#F7F3E3] shadow z-10"
                   onMouseLeave={closeDropdown}
                 >
                   {Array.from({ length: totalPages }, (_, i) => (
                     <div
                       key={i + 1}
+                      ref={i + 1 === currentPage ? currentPageRef : null}
                       onClick={() => {
                         goToPage(i + 1);
                         closeDropdown();
@@ -62,7 +82,7 @@ export default function Pagination({
                 </div>
               )}
             </div>
-                       {/* Next button */}
+            {/* Next button */}
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
