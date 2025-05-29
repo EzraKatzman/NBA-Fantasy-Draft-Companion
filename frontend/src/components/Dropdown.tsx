@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import ChevronDown from "../../public/icons/chevron_down";
+import ChevronDown from "../../public/icons/chevronDown";
 
 interface DropdownProps{
     label?: React.ReactNode;
@@ -37,7 +37,7 @@ export default function Dropdown({ label, options, value, onChange, onSelectClic
             <div className="relative w-full">
                 <button
                     onClick={() => setOpen(!open)}
-                    className="w-full h-12 px-4 text-center font-bold border bg-teal-200 rounded-2xl shadow-sm flex items-center justify-center relative"
+                    className="w-full h-12 px-4 cursor-pointer text-center font-bold border bg-teal-200 rounded-2xl shadow-sm flex items-center justify-center relative"
                 >
                 {value}
                     <span className="absolute right-3 pointer-events-none">
