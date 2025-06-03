@@ -66,7 +66,7 @@ export default function Pagination({
           <div
             ref={dropdownRef}
             onMouseLeave={() => setShowDropdown(false)}
-            className="absolute left-1/2 z-10 mt-2 w-48 max-h-60 -translate-x-1/2 overflow-y-auto rounded-xl border bg-amber-50 shadow"
+            className="absolute left-1/2 z-10 mb-2 w-48 max-h-60 -translate-x-1/2 bottom-full overflow-y-auto rounded-xl border bg-amber-50 shadow"
           >
             {Array.from({ length: totalPages }, (_, i) => {
               const pageNum = i + 1;

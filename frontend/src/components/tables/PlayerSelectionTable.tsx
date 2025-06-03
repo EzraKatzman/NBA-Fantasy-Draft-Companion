@@ -143,6 +143,23 @@ export default function PlayerSelectionTable() {
                   </button>
                 );
               })}
+              <button
+                onClick={() => {
+                  setDraftedPlayersSet(new Set());
+                  setExcludedPlayersSet(new Set());
+                  fetchPlayers(); // optionally refetch players from API to reset any server-side state
+                  setCurrentPage(1);
+                  setSearchTerm("");
+                  setSelectedFilterOption(filterOptions[0]);
+                  setSelectedStrategyOption(strategyOptions[0]);
+                  setActiveTab("All Players");
+                }}
+                className="ml-auto px-4 py-2 text-sm font-semibold rounded-t-md border-b-2 bg-stone-200 text-stone-700 hover:text-stone-200 hover:bg-stone-600"
+                aria-label="Reset drafted and excluded players"
+                title="Reset drafted and excluded players"
+              >
+                Reset
+              </button>
             </div>
           </div>
           <div className="bg-stone-warm p-4 rounded-b-lg rounded-tr-lg shadow -mt-2">
