@@ -28,7 +28,6 @@ uv run main.py
 ```
 
 ## 📌 TODO
-- [ ] Build out frontend
 - [ ] Add suggested draft strategy
 - [ ] Add sorting by position
 - [ ] Allow for custom category weights in PAA calculation
