@@ -1,19 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlayerActionModal from "./modals/PlayerActionModal";
 import Dropdown from "./Dropdown";
 import InfoIcon from "../../public/icons/info_icon";
 import PlayerSearchInput from "./PlayerSearchbar";
 import Pagination from "./Pagination";
+import DraftPlayerButton from "./buttons/DraftPlayerButton";
+import RemovePlayerButton from "./buttons/RemovePlayerButton";
 import { draftPlayer, excludePlayer, viewPlayers, updateStrategy } from "@/api";
 
 export default function PlayerSelectionTable() {
     const [playerData, setPlayerData] = useState<any[]>([]);
-    const [selectedPlayer, setSelectedPlayer] = useState<any | null>(null);
+    const [hiddenPlayers, setHiddenPlayers] = useState<Set<string>>(new Set());
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [modalOpen, setModalOpen] = useState(false);
     const rowsPerPage = 10;
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -40,37 +40,27 @@ export default function PlayerSelectionTable() {
         setPlayerData(players);
     }
 
-    const openModal = (player: any) => {
-        setSelectedPlayer(player);
-        setModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setModalOpen(false);
-        setSelectedPlayer(null);
-    };
-
-    const handleDraft = async() => {
+    const handleDraft = async(selectedPlayer: any) => {
         if (!selectedPlayer) return;
         try {
             await draftPlayer(selectedPlayer.PLAYER_NAME);
-            await fetchPlayers();
+            setHiddenPlayers(prev => new Set(prev).add(selectedPlayer.PLAYER_NAME));
+            // await fetchPlayers();
             // Add visual feedback for player drafted
             alert(`${selectedPlayer.PLAYER_NAME} drafted!`);
-            closeModal();
         } catch (error) {
             console.error(error);
             alert("Failed to draft player");
         }
     };
 
-    const handleExclude = async() => {
+    const handleExclude = async(selectedPlayer: any) => {
         if (!selectedPlayer) return;
         try {
             await excludePlayer(selectedPlayer.PLAYER_NAME);
-            await fetchPlayers();
+            setHiddenPlayers(prev => new Set(prev).add(selectedPlayer.PLAYER_NAME));
+            // await fetchPlayers();
             alert(`${selectedPlayer.PLAYER_NAME} removed from pool!`);
-            closeModal();
         } catch (err) {
             console.error(err);
             alert("Failed to remove player.");
@@ -92,9 +82,9 @@ export default function PlayerSelectionTable() {
         }
     }
 
-    const filteredPlayerData = playerData.filter((player) => 
-      player.PLAYER_NAME.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredPlayerData = playerData
+      .filter(player => player.PLAYER_NAME.toLowerCase().includes(searchTerm.toLowerCase()))
+      .filter(player => !hiddenPlayers.has(player.PLAYER_NAME));
 
     if (playerData.length === 0) return <div>Loading...</div>
 
@@ -143,7 +133,7 @@ export default function PlayerSelectionTable() {
               }}
             />
           </div>
-          <div className={`mt-4 overflow-x-auto rounded-2xl border shadow ${modalOpen ? "pointer-events-none opacity-50" : ""}`}>
+          <div className="mt-4 overflow-x-auto rounded-lg border shadow">
             <table className="w-full table-fixed text-sm text-left">
               <thead className="bg-stone-100">
                 <tr className="h-12 border-b bg-amber-500">
@@ -151,20 +141,22 @@ export default function PlayerSelectionTable() {
                       <th
                         key={col}
                         className={`px-2 py-2 font-semibold uppercase tracking-wide text-stone-900 ${
-                            index === 0 ? 'w-[20%]' : 'w-[8%]'
+                            index === 0 ? 'w-[20%]' : 'w-[7.3%]'
                         }`}
                       >
                         {col === "PLAYER_NAME" ? "Player Name" : col}
                       </th>
                     ))}
+                    <th className="px-2 py-2 font-semibold uppercase tracking-wide text-stone-900 text-center w-[7%]">
+                      Actions
+                    </th>
                 </tr>
               </thead>
               <tbody>
                 {currentRows.map((row, i) => (
                   <tr
                     key={`${row.PLAYER_NAME}-${i}`}
-                    onClick={() => openModal(row)}
-                    className={`h-12 cursor-pointer hover:bg-amber-200 ${i % 2 === 1 ? "bg-amber-100" : "bg-amber-50"}`}
+                    className={`h-12 ${i % 2 === 1 ? "bg-amber-100" : "bg-amber-50"}`}
                   >
                     {columns.map((col) => (
                     <td key={col} className="px-2 truncate">
@@ -173,6 +165,12 @@ export default function PlayerSelectionTable() {
                       : row[col]}
                     </td>
                     ))}
+                    <td className="px-2">
+                    <div className="flex gap-1">
+                      <DraftPlayerButton onDraft={() => handleDraft(row)}/>
+                      <RemovePlayerButton onExclude={() => handleExclude(row)}/>
+                    </div>
+                  </td>
                   </tr>
                 ))}
               </tbody>
@@ -184,13 +182,6 @@ export default function PlayerSelectionTable() {
             currentPage={currentPage}
             totalPages={totalPages}
             goToPage={goToPage}
-          />
-          <PlayerActionModal
-            player={selectedPlayer}
-            onDraft={handleDraft}
-            onExclude={handleExclude}
-            onClose={closeModal}
-            isOpen={modalOpen}
           />
         </div>
     );

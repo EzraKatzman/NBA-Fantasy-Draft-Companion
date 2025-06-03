@@ -51,7 +51,7 @@ export default function Dropdown({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="relative flex h-12 w-full items-center justify-center rounded-2xl border bg-amber-100 px-4 text-center font-semibold shadow-sm cursor-pointer"
+          className="relative flex h-12 w-full items-center justify-center rounded-2xl border bg-amber-100 px-4 text-center text-stone-700 font-medium shadow-sm cursor-pointer"
           aria-haspopup="listbox"
           aria-expanded={open}
         >
@@ -72,7 +72,7 @@ export default function Dropdown({
                 role="option"
                 aria-selected={option === value}
                 onClick={() => handleSelect(option)}
-                className="cursor-pointer rounded-2xl px-4 py-2 text-center hover:bg-amber-100"
+                className="cursor-pointer rounded-2xl px-4 py-2 text-center text-stone-700 hover:bg-amber-100"
               >
                 {option}
               </li>

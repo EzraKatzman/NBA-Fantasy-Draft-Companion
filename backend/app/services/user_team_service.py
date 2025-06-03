@@ -45,7 +45,6 @@ class UserTeamService:
         
         row = matches.iloc[0]
         self.team.add_player(row)
-        self.player_pool_df = self.player_pool_df.drop(matches.index)
 
         logger.info(f"Drafted {player_name} successfully!")
         return True
@@ -56,7 +55,6 @@ class UserTeamService:
             return False
 
         player_name = matches.iloc[0]["PLAYER_NAME"]
-        self.player_pool_df = self.player_pool_df.drop(matches.index)
 
         logger.info(f"Excluded {player_name} from the draft pool")
         return True

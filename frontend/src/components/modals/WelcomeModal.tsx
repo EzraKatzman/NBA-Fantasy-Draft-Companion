@@ -52,14 +52,14 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-sm">
-      <div className="relative w-[90%] max-w-md rounded-lg bg-white p-6 shadow-xl">
+      <div className="relative w-[90%] max-w-md rounded-lg bg-white px-6 py-5 shadow-xl">
         <div
           className={`transition-opacity duration-500 ${
             fade ? "opacity-100" : "opacity-0"
           }`}
         >
           <h2 className="mb-5 text-xl font-semibold text-stone-900">{title}</h2>
-          <p className="mb-5 text-regular text-stone-900">{content}</p>
+          <p className="mb-6 text-regular text-stone-800">{content}</p>
         </div>
 
         <div className="flex items-center justify-between">
@@ -96,7 +96,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
 
         <button
           onClick={() => onClose(false)}
-          className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full text-xl text-stone-400 duration-200 hover:bg-stone-100 hover:text-black"
+          className="absolute right-5 top-4 flex h-8 w-8 items-center justify-center rounded-full text-xl text-stone-400 duration-200 hover:bg-stone-100 hover:text-black"
         >
           &times;
         </button>
