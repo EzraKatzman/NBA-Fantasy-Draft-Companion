@@ -1,28 +1,28 @@
-import React from "react";
-import Draft from "../../../public/icons/addPlayer";
+import React from 'react';
+import Draft from '../../../public/icons/addPlayer';
 
 interface DraftPlayerButtonProps {
-    onDraft: () => void;
-    ariaLabel?: string;
-    title?: string;
+  onDraft: () => void;
+  ariaLabel?: string;
+  title?: string;
 }
 
 export default function DraftPlayerButton({
-    onDraft,
-    ariaLabel,
-    title,
+  onDraft,
+  ariaLabel,
+  title,
 }: DraftPlayerButtonProps) {
-    return (
-        <div>
-            <button
-                type="button"
-                aria-label={ariaLabel}
-                title={title}
-                className="cursor-pointer duration-150 p-1 transition-color"
-                onClick={onDraft}
-            >
-                <Draft/>
-            </button>
-        </div>
-    );
+  return (
+    <div>
+      <button
+        type="button"
+        aria-label={ariaLabel}
+        title={title}
+        className="transition-color cursor-pointer p-1 duration-150"
+        onClick={onDraft}
+      >
+        <Draft />
+      </button>
+    </div>
+  );
 }

@@ -1,17 +1,19 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-    --font-sans: Inter, sans-serif;
+  --font-sans: Inter, sans-serif;
 
-    --color-accent-50: #e5f1fa;
-    --color-accent-100: #A8D9F9;
-    --color-accent-200: #73CBF7;    
-    --color-accent-300: #3DBCF5;
-    --color-accent-400: #38AEE3;
-    --color-accent-500: #34A0D0;
-    --color-accent-600: #2F92BE;    
-    --color-accent-700: #287DA3;    
+  --color-accent-50: #e5f1fa;
+  --color-accent-100: #a8d9f9;
+  --color-accent-200: #73cbf7;
+  --color-accent-300: #3dbcf5;
+  --color-accent-400: #38aee3;
+  --color-accent-500: #34a0d0;
+  --color-accent-600: #2f92be;
+  --color-accent-700: #287da3;
 
-    --color-stone-150: #ECEBE6;
-    --color-stone-warm: #f8f7f2;
+  --color-stone-150: #ecebe6;
+  --color-stone-warm: #f8f7f2;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));

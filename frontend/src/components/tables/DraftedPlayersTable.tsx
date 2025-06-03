@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 interface DraftedPlayersTableProps {
   draftedPlayers: any[];
@@ -11,27 +11,28 @@ export default function DraftedPlayersTable({
 }: DraftedPlayersTableProps) {
   const rowsPerPage = 10;
   const columns =
-    draftedPlayers.length > 0 ? Object.keys(draftedPlayers[0]) : ["PLAYER_NAME"];
+    draftedPlayers.length > 0
+      ? Object.keys(draftedPlayers[0])
+      : ['PLAYER_NAME'];
 
-  // If no players, one row will be used for the "no players" message
   const rowsToPad =
     draftedPlayers.length === 0
       ? rowsPerPage - 1
       : Math.max(0, rowsPerPage - draftedPlayers.length);
 
   return (
-    <div className="overflow-x-auto rounded-lg border shadow">
-      <table className="w-full table-fixed text-sm text-left">
-        <thead className="bg-stone-100">
-          <tr className="h-12 border-b bg-amber-500">
+    <div className="overflow-x-auto rounded-lg border shadow dark:border-stone-300">
+      <table className="w-full table-fixed text-left text-sm">
+        <thead>
+          <tr className="h-12 border-b bg-amber-500 dark:bg-amber-700">
             {columns.map((col, index) => (
               <th
                 key={col}
-                className={`px-2 py-2 font-semibold uppercase tracking-wide text-stone-900 ${
-                  index === 0 ? "w-[20%]" : "w-[7.3%]"
+                className={`px-2 py-2 font-semibold tracking-wide text-stone-900 uppercase dark:text-stone-200 ${
+                  index === 0 ? 'w-[20%]' : 'w-[7.3%]'
                 }`}
               >
-                {col === "PLAYER_NAME" ? "Player Name" : col}
+                {col === 'PLAYER_NAME' ? 'Player Name' : col}
               </th>
             ))}
           </tr>
@@ -39,10 +40,10 @@ export default function DraftedPlayersTable({
         <tbody>
           {draftedPlayers.length === 0 ? (
             <>
-              <tr className="h-12 bg-amber-50">
+              <tr className="h-12 bg-amber-50 dark:bg-stone-800">
                 <td
                   colSpan={columns.length}
-                  className="px-2 py-4 text-center text-stone-500 italic"
+                  className="px-2 py-4 text-center text-stone-500 italic dark:text-stone-400"
                 >
                   No players available.
                 </td>
@@ -50,11 +51,15 @@ export default function DraftedPlayersTable({
               {Array.from({ length: rowsToPad }).map((_, i) => (
                 <tr
                   key={`empty-row-${i}`}
-                  className={`h-12 ${(i + 1) % 2 === 1 ? "bg-amber-100" : "bg-amber-50"}`}
+                  className={`h-12 ${
+                    (i + 1) % 2 === 1
+                      ? 'bg-amber-100 dark:bg-stone-700'
+                      : 'bg-amber-50 dark:bg-stone-800'
+                  }`}
                 >
                   {columns.map((_, colIndex) => (
                     <td key={colIndex} className="px-2">
-                      {"\u00A0"}
+                      &nbsp;
                     </td>
                   ))}
                 </tr>
@@ -66,12 +71,14 @@ export default function DraftedPlayersTable({
                 <tr
                   key={`${row.PLAYER_NAME}-${i}`}
                   className={`h-12 ${
-                    i % 2 === 1 ? "bg-amber-100" : "bg-amber-50"
+                    i % 2 === 1
+                      ? 'bg-amber-100 dark:bg-stone-700'
+                      : 'bg-amber-50 dark:bg-stone-800'
                   }`}
                 >
                   {columns.map((col) => (
-                    <td key={col} className="px-2 truncate">
-                      {col === "PAA" && typeof row[col] === "number"
+                    <td key={col} className="truncate px-2">
+                      {col === 'PAA' && typeof row[col] === 'number'
                         ? row[col].toFixed(2)
                         : row[col]}
                     </td>
@@ -83,13 +90,13 @@ export default function DraftedPlayersTable({
                   key={`empty-row-${i}`}
                   className={`h-12 ${
                     (draftedPlayers.length + i) % 2 === 1
-                      ? "bg-amber-100"
-                      : "bg-amber-50"
+                      ? 'bg-amber-100 dark:bg-stone-700'
+                      : 'bg-amber-50 dark:bg-stone-800'
                   }`}
                 >
                   {columns.map((_, colIndex) => (
                     <td key={colIndex} className="px-2">
-                      {"\u00A0"}
+                      &nbsp;
                     </td>
                   ))}
                 </tr>
