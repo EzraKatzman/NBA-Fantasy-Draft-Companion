@@ -40,27 +40,27 @@ export default function PlayerActionModal({
     if (!isOpen) return null;
 
     return (
-      <div className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 border border-stone-900
-                bg-[#F7F3E3] rounded-xl p-6 shadow-xl 
-                transition-transform duration-300 ease-out
-                ${visible ? "translate-y-60 opacity-100" : "-translate-y-96 opacity-0"}`}>
-            <h2 className="text-xl text-center font-bold mb-4">{player.PLAYER_NAME}</h2>
+      <div className={`fixed left-1/2 top-0 z-50 transform -translate-x-1/2
+            rounded-xl border border-stone-900 bg-stone-100 p-6 shadow-xl
+            transition-transform duration-300 ease-out
+            ${visible ? "translate-y-60 opacity-100" : "-translate-y-96 opacity-0"}`}>
+            <h2 className="mb-4 text-center text-xl font-semibold">{player.PLAYER_NAME}</h2>
             <div className="flex justify-between space-x-4">
                 <button
                     onClick={onDraft}
-                    className="cursor-pointer bg-teal-400 hover:bg-teal-500 text-stone-900 px-4 py-2 rounded"
+                    className="cursor-pointer rounded bg-lime-500 px-4 py-2 text-stone-900 hover:bg-lime-600"
                 >
                     Draft
                 </button>
                 <button
                     onClick={onExclude}
-                    className="cursor-pointer bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded"
+                    className="cursor-pointer rounded bg-red-600 px-4 py-2 text-stone-900 hover:bg-red-700"
                 >
                     Remove
                 </button>
                 <button
                     onClick={onClose}
-                    className="cursor-pointer bg-gray-300 hover:bg-gray-400 text-stone-900 px-4 py-2 rounded"
+                    className="cursor-pointer rounded bg-gray-300 px-4 py-2 text-stone-900 hover:bg-gray-400"
                 >
                     Cancel
                 </button>

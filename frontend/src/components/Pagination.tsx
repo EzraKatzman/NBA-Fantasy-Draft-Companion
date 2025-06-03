@@ -3,97 +3,101 @@ import ChevronRight from "../../public/icons/chevronRight";
 import ChevronLeft from "../../public/icons/chevronLeft";
 
 interface PaginationProps {
-    currentPage: number;
-    totalPages: number;
-    goToPage: (page: number) => void;
+  currentPage: number;
+  totalPages: number;
+  goToPage: (page: number) => void;
 }
 
 export default function Pagination({
-    currentPage, 
-    totalPages, 
-    goToPage
+  currentPage,
+  totalPages,
+  goToPage,
 }: PaginationProps) {
-    const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const currentPageRef = useRef<HTMLDivElement>(null);
 
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const currentPageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (showDropdown && dropdownRef.current && currentPageRef.current) {
+      const dropdown = dropdownRef.current;
+      const currentItem = currentPageRef.current;
 
-    useEffect(() => {
-      if (showDropdown && dropdownRef.current && currentPageRef.current) {
-        const dropdown = dropdownRef.current;
-        const currentItem = currentPageRef.current;
+      const dropdownHeight = dropdown.offsetHeight;
+      const itemOffsetTop = currentItem.offsetTop;
+      const itemHeight = currentItem.offsetHeight;
 
-        const dropdownHeight = dropdown.offsetHeight;
-        const itemOffsetTop = currentItem.offsetTop;
-        const itemHeight = currentItem.offsetHeight;
+      // Center the selected page in the dropdown
+      dropdown.scrollTop = itemOffsetTop - dropdownHeight / 2 + itemHeight / 2;
+    }
+  }, [showDropdown]);
 
-        const scrollTop = itemOffsetTop - dropdownHeight / 2 + itemHeight / 2;
+  const isFirst = currentPage === 1;
+  const isLast = currentPage === totalPages;
 
-        dropdown.scrollTop = scrollTop;
-      }
-    }, [showDropdown]);
+  const navButtonClasses = (disabled: boolean) =>
+    `px-2 py-1 rounded-lg border ${
+      disabled
+        ? "cursor-not-allowed border-stone-300 text-stone-400"
+        : "cursor-pointer border-stone-400 text-stone-900 hover:bg-amber-100"
+    }`;
 
-    const toggleDropdown = () => setShowDropdown(!showDropdown);
-    const closeDropdown = () => setShowDropdown(false);
+  return (
+    <div className="mt-4 flex items-center justify-center space-x-2 relative">
+      {/* Prev */}
+      <button
+        onClick={() => goToPage(currentPage - 1)}
+        disabled={isFirst}
+        className={navButtonClasses(isFirst)}
+      >
+        <ChevronLeft />
+      </button>
 
-    return (
-        <div className="relative flex justify-center items-center mt-4 space-x-2">
-            {/* Prev button */}
-            <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-2 py-1 rounded-lg border ${
-                currentPage === 1
-                  ? "cursor-not-allowed text-gray-400 border-gray-300"
-                  : "cursor-pointer hover:bg-teal-200 text-stone-900 border-gray-400"
-              }`}
-            >
-              <ChevronLeft/>
-            </button>
-            {/* Current Page Dropdown */}
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                className="px-4 py-1 cursor-pointer border border-gray-400 rounded-lg hover:bg-teal-200 text-stone-900"
-              >
-                {String(currentPage).padStart(2, '0')} / <span className="text-gray-600">{totalPages}</span>
-              </button>
-                {showDropdown && (
+      {/* Current Page / Dropdown */}
+      <div className="relative">
+        <button
+          onClick={() => setShowDropdown((prev) => !prev)}
+          className="px-4 py-1 rounded-lg border border-stone-400 text-stone-900 hover:bg-amber-100 cursor-pointer"
+        >
+          <span className="font-semibold">{String(currentPage).padStart(2, "0")}</span>
+          <span className="text-stone-600"> / {totalPages}</span>
+        </button>
+
+        {showDropdown && (
+          <div
+            ref={dropdownRef}
+            onMouseLeave={() => setShowDropdown(false)}
+            className="absolute left-1/2 z-10 mt-2 w-48 max-h-60 -translate-x-1/2 overflow-y-auto rounded-xl border bg-amber-50 shadow"
+          >
+            {Array.from({ length: totalPages }, (_, i) => {
+              const pageNum = i + 1;
+              return (
                 <div
-                  ref={dropdownRef}
-                  className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 max-h-60 overflow-y-auto border rounded-xl bg-[#F7F3E3] shadow z-10"
-                  onMouseLeave={closeDropdown}
+                  key={pageNum}
+                  ref={pageNum === currentPage ? currentPageRef : null}
+                  onClick={() => {
+                    goToPage(pageNum);
+                    setShowDropdown(false);
+                  }}
+                  className={`px-4 py-2 text-center cursor-pointer hover:bg-amber-100 ${
+                    pageNum === currentPage ? "bg-amber-200 font-semibold" : ""
+                  }`}
                 >
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <div
-                      key={i + 1}
-                      ref={i + 1 === currentPage ? currentPageRef : null}
-                      onClick={() => {
-                        goToPage(i + 1);
-                        closeDropdown();
-                      }}
-                      className={`px-4 py-2 cursor-pointer text-center hover:bg-teal-100 ${
-                        i + 1 === currentPage ? "bg-teal-200 font-semibold" : ""
-                      }`}
-                    >
-                      {i + 1}
-                    </div>
-                  ))}
+                  {pageNum}
                 </div>
-              )}
-            </div>
-            {/* Next button */}
-            <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-2 py-1 rounded-lg border ${
-                currentPage === totalPages
-                  ? "cursor-not-allowed text-gray-400 border-gray-300"
-                  : "cursor-pointer hover:bg-teal-200 text-stone-900 border-gray-400"
-              }`}
-            >
-              <ChevronRight/>
-            </button>
-        </div>
-    )
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Next */}
+      <button
+        onClick={() => goToPage(currentPage + 1)}
+        disabled={isLast}
+        className={navButtonClasses(isLast)}
+      >
+        <ChevronRight />
+      </button>
+    </div>
+  );
 }

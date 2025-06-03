@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlayerActionModal from "./PlayerActionModal";
+import PlayerActionModal from "./modals/PlayerActionModal";
 import Dropdown from "./Dropdown";
 import InfoIcon from "../../public/icons/info_icon";
 import PlayerSearchInput from "./PlayerSearchbar";
@@ -109,7 +109,6 @@ export default function PlayerSelectionTable() {
 
     return (
         <div className="w-full max-w-[1250px] mx-auto">
-          <div className="h-10"></div>
           <div className="flex flex-row gap-4">
             <PlayerSearchInput
               value={searchTerm}
@@ -144,14 +143,14 @@ export default function PlayerSelectionTable() {
               }}
             />
           </div>
-          <div className={`overflow-x-auto mt-4 border rounded-2xl shadow ${modalOpen ? "opacity-50 pointer-events-none" : ""}`}>
+          <div className={`mt-4 overflow-x-auto rounded-2xl border shadow ${modalOpen ? "pointer-events-none opacity-50" : ""}`}>
             <table className="w-full table-fixed text-sm text-left">
-              <thead className="bg-gray-100">
+              <thead className="bg-stone-100">
                 <tr className="h-12 border-b bg-amber-500">
                     {columns.map((col, index) => (
                       <th
                         key={col}
-                        className={`px-2 py-2 font-bold text-stone-900 uppercase tracking-wide ${
+                        className={`px-2 py-2 font-semibold uppercase tracking-wide text-stone-900 ${
                             index === 0 ? 'w-[20%]' : 'w-[8%]'
                         }`}
                       >
@@ -165,7 +164,7 @@ export default function PlayerSelectionTable() {
                   <tr
                     key={`${row.PLAYER_NAME}-${i}`}
                     onClick={() => openModal(row)}
-                    className={`h-12 cursor-pointer hover:bg-teal-200 ${i % 2 === 1 ? "bg-[#F7F3E3]" : ""}`}
+                    className={`h-12 cursor-pointer hover:bg-amber-200 ${i % 2 === 1 ? "bg-amber-100" : "bg-amber-50"}`}
                   >
                     {columns.map((col) => (
                     <td key={col} className="px-2 truncate">
