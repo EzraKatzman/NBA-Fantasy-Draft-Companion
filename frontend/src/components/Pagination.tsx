@@ -59,7 +59,7 @@ export default function Pagination({
           className="px-4 py-1 rounded-lg border border-stone-400 text-stone-900 hover:bg-amber-100 cursor-pointer"
         >
           <span className="font-semibold">{String(currentPage).padStart(2, "0")}</span>
-          <span className="text-stone-600"> / {totalPages}</span>
+          <span className="text-stone-600"> / {String(totalPages).padStart(2, "0")}</span>
         </button>
 
         {showDropdown && (

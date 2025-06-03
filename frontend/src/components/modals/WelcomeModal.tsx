@@ -27,7 +27,12 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
     {
       title: "Manage Your Team",
       content:
-        'Click a player’s name and press "Draft" to add them. Click the remove icon next to a player’s name to delete them from the list.',
+        'Click the player icon next to a player to add them to your team. Click the trash icon next to a player to delete them from the list.',
+    },
+    {
+      title: "View Your Team",
+      content:
+        'Click the "My Team" tab to view the players drafted to your team. Return to the draft board by pressing the "All Players" tab.',
     },
   ];
 
@@ -69,7 +74,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
             className={`w-18 rounded px-4 py-2 ${
               currentIndex === 0
                 ? "cursor-not-allowed bg-stone-200 text-stone-400"
-                : "bg-amber-500 text-white hover:bg-amber-600"
+                : "bg-amber-500 text-stone-900 hover:bg-amber-600"
             }`}
           >
             Back
@@ -88,7 +93,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
 
           <button
             onClick={handleNext}
-            className="w-18 rounded bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
+            className="w-18 rounded bg-amber-500 px-4 py-2 text-stone-900 hover:bg-amber-600"
           >
             {currentIndex === tutorialContent.length - 1 ? "Done" : "Next"}
           </button>

@@ -7,6 +7,7 @@ interface DropdownProps {
   value: string;
   onChange: (value: string) => void;
   onSelectAction?: (value: string) => void | Promise<void>;
+  disabled?: boolean;
 }
 
 export default function Dropdown({
@@ -15,6 +16,7 @@ export default function Dropdown({
   value,
   onChange,
   onSelectAction,
+  disabled,
 }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -50,8 +52,14 @@ export default function Dropdown({
       <div className="relative w-full">
         <button
           type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          className="relative flex h-12 w-full items-center justify-center rounded-2xl border bg-amber-100 px-4 text-center text-stone-700 font-medium shadow-sm cursor-pointer"
+          onClick={() => {
+            if (!disabled) setOpen((prev) => !prev);
+          }}
+          className={`relative flex h-12 w-full items-center justify-center rounded-2xl border px-4 text-center font-medium shadow-sm bg-amber-100 text-stone-700 ${
+            disabled
+              ? "cursor-not-allowed"
+              : "cursor-pointer"
+          }`}
           aria-haspopup="listbox"
           aria-expanded={open}
         >
@@ -61,7 +69,7 @@ export default function Dropdown({
           </span>
         </button>
 
-        {open && (
+        {open && !disabled && (
           <ul
             role="listbox"
             className="absolute z-10 mt-2 w-full rounded-2xl border bg-amber-50 shadow-lg"
