@@ -51,6 +51,9 @@ export default function PlayerSelectionTable() {
     'All Players'
   );
 
+  const [sortColumn, setSortColumn] = useState('PAA');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
   useEffect(() => {
     fetchPlayers();
   }, []);
@@ -92,6 +95,8 @@ export default function PlayerSelectionTable() {
   };
 
   const handleStrategyChange = async (strategyLabel: string) => {
+    setSortColumn('PAA');
+    setSortDirection('desc');
     const strategyKey =
       STRATEGY_LABEL_TO_KEY[strategyLabel] ?? strategyLabel.toLowerCase();
     try {
@@ -128,22 +133,28 @@ export default function PlayerSelectionTable() {
       player.PLAYER_NAME.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+  const sortedPlayers = [...(activeTab === 'All Players' ? filteredAvailablePlayers : draftedPlayers)].sort((a, b) => {
+    const aVal = a[sortColumn];
+    const bVal = b[sortColumn];
+
+    // For float columns (stats, PAA)
+    if (!isNaN(aVal) && !isNaN(bVal)) {
+      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+    }
+    // For string collumns
+    return String(aVal).toLowerCase().localeCompare(String(bVal).toLowerCase()) * (sortDirection === 'asc' ? 1 : -1);
+  });
+
   if (playerData.length === 0) return <div>Loading...</div>;
 
   const totalPages =
     activeTab === 'All Players'
       ? Math.ceil(filteredAvailablePlayers.length / rowsPerPage)
       : Math.ceil(draftedPlayers.length / rowsPerPage);
-  const currentRows =
-    activeTab === 'All Players'
-      ? filteredAvailablePlayers.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        )
-      : draftedPlayers.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        );
+  const currentRows = sortedPlayers.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
   const rowsToPad = Math.max(0, rowsPerPage - currentRows.length);
 
   const goToPage = (page: number) => {
@@ -153,7 +164,7 @@ export default function PlayerSelectionTable() {
   const columns = playerData.length > 0 ? Object.keys(playerData[0]) : [];
 
   return (
-    <div className="mx-auto w-full max-w-[1250px] dark:text-stone-300">
+    <div className="mx-auto w-full max-w-[1250px]">
       <div className="">
         <div className="mb-2 flex space-x-2">
           {['All Players', 'My Team'].map((tab) => {
@@ -166,8 +177,8 @@ export default function PlayerSelectionTable() {
                 onClick={() => setActiveTab(tab as 'All Players' | 'My Team')}
                 className={`relative cursor-pointer rounded-t-md border-b-2 px-4 py-2 text-sm font-semibold ${
                   activeTab === tab
-                    ? 'border-amber-500 bg-amber-100 text-amber-600 dark:bg-stone-800 dark:text-amber-400'
-                    : 'border-stone-500 bg-stone-200 text-stone-600 hover:text-stone-800 dark:border-stone-200 dark:bg-stone-700 dark:text-stone-300 dark:hover:text-stone-200'
+                    ? 'border-amber-500 bg-amber-100 text-amber-600'
+                    : 'border-stone-500 bg-stone-200 text-stone-600 hover:text-stone-800'
                 }`}
               >
                 {tab}
@@ -189,8 +200,10 @@ export default function PlayerSelectionTable() {
               setSelectedFilterOption(filterOptions[0]);
               setSelectedStrategyOption(strategyOptions[0]);
               setActiveTab('All Players');
+              setSortColumn('PAA');
+              setSortDirection('desc');
             }}
-            className="ml-auto cursor-pointer rounded-t-md border-b-2 bg-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-600 hover:text-stone-200 dark:bg-stone-700 dark:text-stone-300 dark:hover:bg-stone-600 dark:hover:text-stone-100"
+            className="ml-auto cursor-pointer rounded-t-md border-b-2 bg-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-600 hover:text-stone-200"
             aria-label="Reset drafted and excluded players"
             title="Reset drafted and excluded players"
           >
@@ -198,7 +211,7 @@ export default function PlayerSelectionTable() {
           </button>
         </div>
       </div>
-      <div className="-mt-2 rounded-tr-lg rounded-b-lg bg-stone-warm p-4 shadow dark:bg-stone-800">
+      <div className="-mt-2 rounded-tr-lg rounded-b-lg bg-stone-100 p-4 shadow">
         <div className="flex flex-row gap-4">
           <PlayerSearchInput
             value={searchTerm}
@@ -219,7 +232,7 @@ export default function PlayerSelectionTable() {
               <span className="flex items-center gap-1">
                 <div className="group relative -ml-1.5">
                   <InfoIcon className="cursor-pointer" />
-                  <div className="absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 rounded bg-amber-500 px-2 py-1 text-xs whitespace-nowrap text-stone-900 shadow-lg group-hover:block dark:bg-stone-700 dark:text-stone-100">
+                  <div className="absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 rounded bg-amber-500 px-2 py-1 text-xs whitespace-nowrap text-stone-900 shadow-lg group-hover:block">
                     The draft strategy will determine how each stat is weighed
                     when calculating the PAA score
                   </div>
@@ -240,18 +253,31 @@ export default function PlayerSelectionTable() {
             <div className="mt-4 overflow-x-auto rounded-lg border shadow">
               <table className="w-full table-fixed text-left text-sm">
                 <thead>
-                  <tr className="h-12 border-b bg-amber-500 dark:bg-amber-700">
+                  <tr className="h-12 border-b bg-amber-500">
                     {columns.map((col, index) => (
                       <th
                         key={col}
-                        className={`px-2 py-2 font-semibold tracking-wide text-stone-900 uppercase dark:text-stone-200 ${
+                        onClick={() => {
+                          if (sortColumn === col) {
+                            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+                          } else {
+                            setSortColumn(col)
+                            setSortDirection('asc')
+                          }
+                        }}
+                        className={`cursor-pointer px-2 py-2 font-semibold tracking-wide text-stone-900 uppercase ${
                           index === 0 ? 'w-[20%]' : 'w-[7.3%]'
                         }`}
                       >
                         {col === 'PLAYER_NAME' ? 'Player Name' : col}
+                        {sortColumn === col && (
+                          <span className="text-sm">
+                            {sortDirection === 'asc' ? '▲' : '▼'}
+                          </span>
+                        )}
                       </th>
                     ))}
-                    <th className="w-[7%] px-2 py-2 text-center font-semibold tracking-wide text-stone-900 uppercase dark:text-stone-200">
+                    <th className="w-[7%] px-2 py-2 text-center font-semibold tracking-wide text-stone-900 uppercase">
                       Actions
                     </th>
                   </tr>
@@ -260,7 +286,7 @@ export default function PlayerSelectionTable() {
                   {currentRows.map((row, i) => (
                     <tr
                       key={`${row.PLAYER_NAME}-${i}`}
-                      className={`h-12 ${i % 2 === 1 ? 'bg-amber-100 dark:bg-stone-700' : 'bg-amber-50 dark:bg-stone-800'}`}
+                      className={`h-12 ${i % 2 === 1 ? 'bg-amber-100' : 'bg-amber-50'}`}
                     >
                       {columns.map((col) => (
                         <td key={col} className="truncate px-2">
@@ -288,7 +314,7 @@ export default function PlayerSelectionTable() {
                   {Array.from({ length: rowsToPad }).map((_, i) => (
                     <tr
                       key={`empty-row-${i}`}
-                      className={`h-12 ${(currentRows.length + i) % 2 === 1 ? 'bg-amber-100 dark:bg-stone-700' : 'bg-amber-50 dark:bg-stone-800'}`}
+                      className={`h-12 ${(currentRows.length + i) % 2 === 1 ? 'bg-amber-100' : 'bg-amber-50'}`}
                     >
                       {columns.map((_, colIndex) => (
                         <td key={colIndex} className="px-2">

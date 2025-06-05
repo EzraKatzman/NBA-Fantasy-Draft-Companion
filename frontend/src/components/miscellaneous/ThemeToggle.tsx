@@ -45,7 +45,7 @@ export default function ThemeToggle() {
   }, []);
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex space-x-1 rounded-full border border-stone-300 bg-stone-100 p-1 shadow-md dark:border-stone-700 dark:bg-stone-800">
+    <div className="fixed top-4 right-4 z-50 flex space-x-1 rounded-full border border-stone-300 bg-stone-100 p-1 shadow-md">
       {themes.map((t) => {
         const Icon = iconMap[t];
         return (
@@ -56,7 +56,7 @@ export default function ThemeToggle() {
             className={`rounded-full p-1 transition-colors duration-200 *:size-7 ${
               theme === t
                 ? 'bg-amber-500 text-stone-900'
-                : 'text-stone-800 dark:bg-stone-700 dark:text-stone-300'
+                : 'text-stone-800'
             }`}
           >
             <Icon className="h-5 w-5" />

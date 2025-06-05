@@ -12,7 +12,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
     {
       title: 'Welcome to the Draft Board!',
       content:
-        'Browse all NBA players and their fantasy stats. Use column sorting and the search bar to quickly find players.',
+        'Browse all NBA players and their fantasy stats. Use column sorting and the search bar to quickly find players. The default ordering is by PAA.',
     },
     {
       title: 'What is PAA?',
@@ -57,16 +57,16 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
 
   return (
     <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-      <div className="relative w-[90%] max-w-md rounded-lg bg-white px-6 py-5 shadow-xl dark:bg-stone-800 dark:shadow-black/40">
+      <div className="relative w-[90%] max-w-md rounded-lg bg-white px-6 py-5 shadow-xl">
         <div
           className={`transition-opacity duration-500 ${
             fade ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <h2 className="mb-5 text-xl font-semibold text-stone-900 dark:text-stone-100">
+          <h2 className="mb-5 text-xl font-semibold text-stone-900">
             {title}
           </h2>
-          <p className="text-regular mb-6 text-stone-800 dark:text-stone-200">
+          <p className="text-regular mb-6 text-stone-800">
             {content}
           </p>
         </div>
@@ -77,8 +77,8 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
             disabled={currentIndex === 0}
             className={`w-18 rounded px-4 py-2 ${
               currentIndex === 0
-                ? 'cursor-not-allowed bg-stone-200 text-stone-400 dark:bg-stone-600 dark:text-stone-500'
-                : 'bg-amber-500 text-stone-900 hover:bg-amber-600 dark:text-stone-900 dark:hover:bg-amber-400'
+                ? 'cursor-not-allowed bg-stone-200 text-stone-400'
+                : 'bg-amber-500 text-stone-900 hover:bg-amber-600'
             }`}
           >
             Back
@@ -91,7 +91,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                 className={`h-3 w-3 rounded-full transition-colors duration-300 ${
                   i === currentIndex
                     ? 'bg-amber-500'
-                    : 'bg-stone-300 dark:bg-stone-600'
+                    : 'bg-stone-300'
                 }`}
               />
             ))}
@@ -99,7 +99,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
 
           <button
             onClick={handleNext}
-            className="w-18 rounded bg-amber-500 px-4 py-2 text-stone-900 hover:bg-amber-600 dark:text-stone-900 dark:hover:bg-amber-400"
+            className="w-18 rounded bg-amber-500 px-4 py-2 text-stone-900 hover:bg-amber-600"
           >
             {currentIndex === tutorialContent.length - 1 ? 'Done' : 'Next'}
           </button>
@@ -107,7 +107,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
 
         <button
           onClick={() => onClose(false)}
-          className="absolute top-4 right-5 flex h-8 w-8 items-center justify-center rounded-full text-xl text-stone-400 duration-200 hover:bg-stone-100 hover:text-black dark:text-stone-300 dark:hover:bg-stone-700 dark:hover:text-white"
+          className="absolute top-4 right-5 flex h-8 w-8 items-center justify-center rounded-full text-xl text-stone-400 duration-200 hover:bg-stone-100 hover:text-black"
         >
           &times;
         </button>

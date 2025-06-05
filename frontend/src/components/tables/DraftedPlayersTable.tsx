@@ -21,14 +21,14 @@ export default function DraftedPlayersTable({
       : Math.max(0, rowsPerPage - draftedPlayers.length);
 
   return (
-    <div className="overflow-x-auto rounded-lg border shadow dark:border-stone-300">
+    <div className="overflow-x-auto rounded-lg border shadow">
       <table className="w-full table-fixed text-left text-sm">
         <thead>
-          <tr className="h-12 border-b bg-amber-500 dark:bg-amber-700">
+          <tr className="h-12 border-b bg-amber-500">
             {columns.map((col, index) => (
               <th
                 key={col}
-                className={`px-2 py-2 font-semibold tracking-wide text-stone-900 uppercase dark:text-stone-200 ${
+                className={`px-2 py-2 font-semibold tracking-wide text-stone-900 uppercase ${
                   index === 0 ? 'w-[20%]' : 'w-[7.3%]'
                 }`}
               >
@@ -40,10 +40,10 @@ export default function DraftedPlayersTable({
         <tbody>
           {draftedPlayers.length === 0 ? (
             <>
-              <tr className="h-12 bg-amber-50 dark:bg-stone-800">
+              <tr className="h-12 bg-amber-50">
                 <td
                   colSpan={columns.length}
-                  className="px-2 py-4 text-center text-stone-500 italic dark:text-stone-400"
+                  className="px-2 py-4 text-center text-stone-500 italic"
                 >
                   No players available.
                 </td>
@@ -53,8 +53,8 @@ export default function DraftedPlayersTable({
                   key={`empty-row-${i}`}
                   className={`h-12 ${
                     (i + 1) % 2 === 1
-                      ? 'bg-amber-100 dark:bg-stone-700'
-                      : 'bg-amber-50 dark:bg-stone-800'
+                      ? 'bg-amber-100'
+                      : 'bg-amber-50'
                   }`}
                 >
                   {columns.map((_, colIndex) => (
@@ -72,8 +72,8 @@ export default function DraftedPlayersTable({
                   key={`${row.PLAYER_NAME}-${i}`}
                   className={`h-12 ${
                     i % 2 === 1
-                      ? 'bg-amber-100 dark:bg-stone-700'
-                      : 'bg-amber-50 dark:bg-stone-800'
+                      ? 'bg-amber-100'
+                      : 'bg-amber-50'
                   }`}
                 >
                   {columns.map((col) => (
@@ -90,8 +90,8 @@ export default function DraftedPlayersTable({
                   key={`empty-row-${i}`}
                   className={`h-12 ${
                     (draftedPlayers.length + i) % 2 === 1
-                      ? 'bg-amber-100 dark:bg-stone-700'
-                      : 'bg-amber-50 dark:bg-stone-800'
+                      ? 'bg-amber-100'
+                      : 'bg-amber-50'
                   }`}
                 >
                   {columns.map((_, colIndex) => (

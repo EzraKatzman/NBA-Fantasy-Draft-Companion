@@ -15,7 +15,7 @@ export default function PlayerSearchInput({
     <div className="flex w-[616px] flex-col">
       <label
         htmlFor="player-search"
-        className="mb-1 text-base font-semibold text-stone-900 dark:text-stone-300"
+        className="mb-1 text-base font-semibold text-stone-900"
       >
         Player Search:
       </label>
@@ -25,7 +25,7 @@ export default function PlayerSearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-12 w-full rounded-2xl border border-stone-900 bg-amber-50 px-4 shadow-sm focus:placeholder:text-stone-900 dark:border-stone-300 dark:bg-neutral-800 dark:text-stone-100 dark:focus:placeholder:text-stone-400"
+        className="h-12 w-full rounded-2xl border border-stone-900 bg-amber-50 px-4 shadow-sm focus:placeholder:text-stone-900"
       />
     </div>
   );

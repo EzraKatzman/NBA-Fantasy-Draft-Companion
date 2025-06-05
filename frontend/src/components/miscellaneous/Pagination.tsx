@@ -37,8 +37,8 @@ export default function Pagination({
   const navButtonClasses = (disabled: boolean) =>
     `px-2 py-1 rounded-lg border ${
       disabled
-        ? 'cursor-not-allowed border-stone-300 text-stone-400 dark:border-stone-700 dark:text-stone-500'
-        : 'cursor-pointer border-stone-400 text-stone-900 hover:bg-amber-100 dark:border-stone-600 dark:text-stone-100 dark:hover:bg-stone-700'
+        ? 'cursor-not-allowed border-stone-300 text-stone-400'
+        : 'cursor-pointer border-stone-400 text-stone-900 hover:bg-amber-100'
     }`;
 
   return (
@@ -56,12 +56,12 @@ export default function Pagination({
       <div className="relative">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="cursor-pointer rounded-lg border border-stone-400 px-4 py-1 text-stone-900 hover:bg-amber-100 dark:border-stone-600 dark:text-stone-100 dark:hover:bg-stone-700"
+          className="cursor-pointer rounded-lg border border-stone-400 px-4 py-1 text-stone-900 hover:bg-amber-100"
         >
           <span className="font-semibold">
             {String(currentPage).padStart(2, '0')}
           </span>
-          <span className="text-stone-600 dark:text-stone-400">
+          <span className="text-stone-600">
             {' '}
             / {String(totalPages).padStart(2, '0')}
           </span>
@@ -71,7 +71,7 @@ export default function Pagination({
           <div
             ref={dropdownRef}
             onMouseLeave={() => setShowDropdown(false)}
-            className="absolute bottom-full left-1/2 z-10 mb-2 max-h-60 w-48 -translate-x-1/2 overflow-y-auto rounded-xl border bg-amber-50 shadow dark:border-stone-600 dark:bg-stone-700"
+            className="absolute bottom-full left-1/2 z-10 mb-2 max-h-60 w-48 -translate-x-1/2 overflow-y-auto rounded-xl border bg-amber-50 shadow"
           >
             {Array.from({ length: totalPages }, (_, i) => {
               const pageNum = i + 1;
@@ -83,10 +83,10 @@ export default function Pagination({
                     goToPage(pageNum);
                     setShowDropdown(false);
                   }}
-                  className={`cursor-pointer px-4 py-2 text-center hover:bg-amber-100 dark:hover:bg-stone-600 ${
+                  className={`cursor-pointer px-4 py-2 text-center hover:bg-amber-100 ${
                     pageNum === currentPage
-                      ? 'bg-amber-200 font-semibold dark:bg-stone-500'
-                      : 'dark:text-stone-100'
+                      ? 'bg-amber-200 font-semibold'
+                      : ''
                   }`}
                 >
                   {pageNum}
