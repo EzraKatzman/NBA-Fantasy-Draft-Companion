@@ -28,7 +28,7 @@ uv run main.py
 ```
 
 ## 📌 TODO
-- [ ] Add dark mode
+- [x] Add dark mode
 - [ ] Add option to draft rookie class (after NBA draft)
 - [ ] Add suggested draft strategy
 - [ ] Add sorting by position
